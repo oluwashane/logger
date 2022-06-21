@@ -2,9 +2,9 @@
   "name": "hello-cli",
   "version": "1.0.0",
   "description": "",
-  "main": "bin/index.js",
+  "main": "build/src/bin/index.js",
   "bin": {
-    "hello": "./bin/index.js"
+    "hello": "./build/src/bin/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

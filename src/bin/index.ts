@@ -3,35 +3,64 @@ const yargs = require('yargs');
 const path = require('path');
 const fs = require('fs');
 
-const options = yargs
-  .usage('Usage: --i <input file>')
-  .usage('Usage: --0 <output file>')
-  .options('i', {
-    alias: 'input',
-    describe: 'input file log',
-    type: 'file',
-    demandOption: true,
-  })
-  .options('o', {
-    alias: 'output',
-    describe: 'output file',
-    type: 'file',
-    demandOption: true,
-  }).argv;
-
-const inputData = path.join(__dirname, '../file', options.input);
-const data = fs.readFileSync(inputData, 'utf8');
 // convert to array
-const newDataArray = data.split('\n');
-newDataArray.forEach(data => {
-  const [timeStamp, logLevel, others] = data.split(' - ');
-  const {transactionId, err, ...details} = JSON.parse(others);
-  const newObject = {timeStamp, logLevel, transactionId, err: err ? err : ''};
-  console.log(newObject);
-});
+class Logger {
+  data: any;
+  inputData: any;
+  formattedDocument: any;
 
-// class Logger {
-//   constructor() {}
+  constructor() {
+    this.inputData = path.join(
+      __dirname,
+      '../../',
+      '../file',
+      this.options().input
+    );
+    this.data = fs.readFileSync(this.inputData, 'utf8');
+    this.formattedDocument = [];
+  }
 
-//   readData() {}
-// }
+  options() {
+    const options = yargs
+      .usage('Usage: --i <input file>')
+      .usage('Usage: --0 <output file>')
+      .options('i', {
+        alias: 'input',
+        describe: 'input file log',
+        type: 'file',
+        demandOption: true,
+      })
+      .options('o', {
+        alias: 'output',
+        describe: 'output file',
+        type: 'file',
+        demandOption: true,
+      }).argv;
+    return options;
+  }
+
+  readData() {
+    const newDataArray = this.data.split('\n');
+    newDataArray.forEach(
+      (data: {split: (arg0: string) => [string, string, string]}) => {
+        const [timeStamp, logLevel, others] = data.split(' - ');
+        const {transactionId, err, ...details} = JSON.parse(others);
+        const newObject = {
+          timeStamp,
+          logLevel,
+          transactionId,
+          err: err ? err : '',
+        };
+        this.formattedDocument.push(newObject);
+      }
+    );
+  }
+
+  start() {
+    this.readData();
+    console.log(this.formattedDocument);
+  }
+}
+
+const logger = new Logger();
+logger.start();
