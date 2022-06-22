@@ -10,7 +10,7 @@ declare class Logger {
     constructor();
     options(): any;
     readData(): void;
-    writeData(): void;
+    writeData(filterType: string): void;
     start(): void;
 }
 declare const logger: Logger;

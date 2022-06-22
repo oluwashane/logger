@@ -58,8 +58,11 @@ class Logger {
     );
   }
 
-  writeData() {
-    const formatData = JSON.stringify(this.formattedDocument);
+  writeData(filterType: string) {
+    const filterData = this.formattedDocument.filter(
+      (data: any) => data.logLevel === filterType
+    );
+    const formatData = JSON.stringify(filterData);
     const outputPath = path.join(
       __dirname,
       '../..',
@@ -69,12 +72,11 @@ class Logger {
     const stream = fs.createWriteStream(outputPath);
     stream.write(formatData);
     stream.end();
-    // fs.WriteStream(outputPath, data);
   }
 
   start() {
     this.readData();
-    this.writeData();
+    this.writeData('error');
   }
 }
 

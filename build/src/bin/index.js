@@ -43,17 +43,17 @@ class Logger {
             this.formattedDocument.push(newObject);
         });
     }
-    writeData() {
-        const formatData = JSON.stringify(this.formattedDocument);
+    writeData(filterType) {
+        const filterData = this.formattedDocument.filter((data) => data.logLevel === filterType);
+        const formatData = JSON.stringify(filterData);
         const outputPath = path.join(__dirname, '../..', '../file', this.outputFileName);
         const stream = fs.createWriteStream(outputPath);
         stream.write(formatData);
         stream.end();
-        // fs.WriteStream(outputPath, data);
     }
     start() {
         this.readData();
-        this.writeData();
+        this.writeData('debug');
     }
 }
 const logger = new Logger();
