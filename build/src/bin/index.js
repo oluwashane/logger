@@ -7,6 +7,7 @@ const fs = require('fs');
 class Logger {
     constructor() {
         this.inputData = path.join(__dirname, '../../', '../file', this.options().input);
+        this.outputFileName = this.options().output;
         this.data = fs.readFileSync(this.inputData, 'utf8');
         this.formattedDocument = [];
     }
@@ -42,9 +43,17 @@ class Logger {
             this.formattedDocument.push(newObject);
         });
     }
+    writeData() {
+        const formatData = JSON.stringify(this.formattedDocument);
+        const outputPath = path.join(__dirname, '../..', '../file', this.outputFileName);
+        const stream = fs.createWriteStream(outputPath);
+        stream.write(formatData);
+        stream.end();
+        // fs.WriteStream(outputPath, data);
+    }
     start() {
         this.readData();
-        console.log(this.formattedDocument);
+        this.writeData();
     }
 }
 const logger = new Logger();

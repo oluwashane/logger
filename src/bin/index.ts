@@ -8,6 +8,7 @@ class Logger {
   data: any;
   inputData: any;
   formattedDocument: any;
+  outputFileName: string;
 
   constructor() {
     this.inputData = path.join(
@@ -16,6 +17,7 @@ class Logger {
       '../file',
       this.options().input
     );
+    this.outputFileName = this.options().output;
     this.data = fs.readFileSync(this.inputData, 'utf8');
     this.formattedDocument = [];
   }
@@ -56,9 +58,23 @@ class Logger {
     );
   }
 
+  writeData() {
+    const formatData = JSON.stringify(this.formattedDocument);
+    const outputPath = path.join(
+      __dirname,
+      '../..',
+      '../file',
+      this.outputFileName
+    );
+    const stream = fs.createWriteStream(outputPath);
+    stream.write(formatData);
+    stream.end();
+    // fs.WriteStream(outputPath, data);
+  }
+
   start() {
     this.readData();
-    console.log(this.formattedDocument);
+    this.writeData();
   }
 }
 
