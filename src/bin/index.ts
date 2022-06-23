@@ -62,7 +62,7 @@ class Logger {
     const filterData = this.formattedDocument.filter(
       (data: any) => data.logLevel === filterType
     );
-    const formatData = JSON.stringify(filterData);
+    const formatData = filterType === '' ? this.formattedDocument : filterData;
     const outputPath = path.join(
       __dirname,
       '../..',
@@ -70,7 +70,7 @@ class Logger {
       this.outputFileName
     );
     const stream = fs.createWriteStream(outputPath);
-    stream.write(formatData);
+    stream.write(JSON.stringify(formatData));
     stream.end();
   }
 
